@@ -50,9 +50,9 @@ python run_multiple_settings.py
 Instead of using the terminal you can of course also use an IDE like e.g. [Spyder](https://anaconda.org/anaconda/spyder) (included in Anaconda) to edit and run the files.
 
 
-###Options   
+### Options   
 
-####Mandatory Options  
+#### Mandatory Options  
 
 | **Option** | **Name** | **Description** |  
 |--------|-----|-----------|   
@@ -61,10 +61,10 @@ Instead of using the terminal you can of course also use an IDE like e.g. [Spyde
 | `-F` | motif length | Upper limit for the temporal extend of each motif. |   
 | `-a` | sparsity parameter | Influences the sparsity of the found activations. Smaller values lead to more sparsity. |   
 
-####Additional Options
+#### Additional Options
 
 | **Option** | **Name** | **Description** |  
-|--------|-----|-----------|   
+|-----------|-----|-----------|   
 | `-ds` | data sheet | Only required if the data is provided in an HDF5 file. Specify the sheet within the file containing the CA video. |   
 | `-kld`  | beta_kld | Additional sparsity parameter to regulate the influence of the KL-divergence term in the loss function. The influence of the KL-divergence on the sparsity of the found activation depends on the choice of `-a`. However, in most cases higher values for `-kld` will result in sparser activations. |   
 | `-mode` | processing mode | The processing mode can be either set to "complete" or "batches". If it is set to "complete", the video is processed as a whole in every learning epoch. However, depending on the size of the video and the RAM of the GPU this is not always possible. In the mode "batches" only a shorter sequence of consecutive frames is analyzed in every epoch. |   
@@ -75,7 +75,7 @@ Instead of using the terminal you can of course also use an IDE like e.g. [Spyde
  
  
  
-##Plotting 
+## Plotting 
 
 To create additional plots of the results or *.tif and *.gif movies of the found motifs, you can use the functions provided in `plot.py`.      
 
