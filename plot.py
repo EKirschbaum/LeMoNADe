@@ -41,11 +41,11 @@ class make_plots(object):
         n_filter = x.shape[0]
         filter_length = x.shape[1]
         if filter_length < 50:        
-            width = filter_length*10
-            height = n_filter*10
+            width = filter_length*7.
+            height = n_filter*7.
         else:
-            width = filter_length*5
-            height = n_filter*5
+            width = filter_length*5.
+            height = n_filter*5.
             
         params = {
                 'axes.labelsize': 50,
@@ -61,25 +61,45 @@ class make_plots(object):
                        
         fig, ax = plt.subplots(n_filter,filter_length)
         if n_filter == 1:
-            ax[0].set_ylabel('motif 0')
-            for i in range(filter_length):
-                ax[i].set_xlabel('frame '+str(i))
-                ax[i].set_yticks([])
-                ax[i].set_yticklabels([])
-                ax[i].set_xticks([])
-                ax[i].set_xticklabels([])
-                ax[i].imshow(x[0,i], vmin=np.min(x[0]), vmax=np.max(x[0]), cmap=plt.cm.binary)
-        else:
-            for j in range(n_filter):
-                ax[j,0].set_ylabel('motif '+str(j))
+            if filter_length == 1:
+                ax.set_ylabel('motif 0')
+                ax.set_xlabel('frame 0')
+                ax.set_yticks([])
+                ax.set_yticklabels([])
+                ax.set_xticks([])
+                ax.set_xticklabels([])
+                ax.imshow(x[0,0], vmin=np.min(x[0]), vmax=np.max(x[0]), cmap=plt.cm.binary)
+            else:
+                ax[0].set_ylabel('motif 0')
                 for i in range(filter_length):
-                    ax[j,i].set_xlabel('frame '+str(i))
-                    ax[j,i].set_yticks([])
-                    ax[j,i].set_yticklabels([])
-                    ax[j,i].set_xticks([])
-                    ax[j,i].set_xticklabels([])
-                    ax[j,i].imshow(x[j,i], vmin=np.min(x[j]), vmax=np.max(x[j]), cmap=plt.cm.binary)
-            
+                    ax[i].set_xlabel('frame '+str(i))
+                    ax[i].set_yticks([])
+                    ax[i].set_yticklabels([])
+                    ax[i].set_xticks([])
+                    ax[i].set_xticklabels([])
+                    ax[i].imshow(x[0,i], vmin=np.min(x[0]), vmax=np.max(x[0]), cmap=plt.cm.binary)
+        else:
+            if filter_length == 1:
+                for j in range(n_filter):
+                    ax[j].set_ylabel('motif '+str(j))
+                    ax[j].set_xlabel('frame 0')
+                    ax[j].set_yticks([])
+                    ax[j].set_yticklabels([])
+                    ax[j].set_xticks([])
+                    ax[j].set_xticklabels([])
+                    ax[j].imshow(x[j,0], vmin=np.min(x[j]), vmax=np.max(x[j]), cmap=plt.cm.binary)
+                
+            else: 
+                for j in range(n_filter):
+                    ax[j,0].set_ylabel('motif '+str(j))
+                    for i in range(filter_length):
+                        ax[j,i].set_xlabel('frame '+str(i))
+                        ax[j,i].set_yticks([])
+                        ax[j,i].set_yticklabels([])
+                        ax[j,i].set_xticks([])
+                        ax[j,i].set_xticklabels([])
+                        ax[j,i].imshow(x[j,i], vmin=np.min(x[j]), vmax=np.max(x[j]), cmap=plt.cm.binary)
+                
         if self.eps == True:
             fig.savefig(self.folder+'motifs'+self.ending+'.eps',bbox_inches='tight')
         else:
@@ -91,9 +111,13 @@ class make_plots(object):
     def plot_motifs_every_second_frame(self, x):
         n_filter = x.shape[0]
         filter_length = x.shape[1]
+        if filter_length == 1:
+            self.plot_motifs(x)
+            return()
+            
         if filter_length < 50:        
-            width = filter_length/2.*10.
-            height = n_filter*10.
+            width = filter_length/2.*7.
+            height = n_filter*7.
         else:
             width = filter_length/2.*5.
             height = n_filter*5.
@@ -144,12 +168,13 @@ class make_plots(object):
         
         n_filter = 1
         filter_length = len(frames)
+            
         if filter_length < 50:        
-            width = filter_length*10
-            height = n_filter*10
+            width = filter_length*7.
+            height = n_filter*7.
         else:
-            width = filter_length*5
-            height = n_filter*5
+            width = filter_length*5.
+            height = n_filter*5.
             
         params = {
                 'axes.labelsize': 50,
@@ -164,15 +189,25 @@ class make_plots(object):
         plt.rcParams.update(params)
                        
         fig, ax = plt.subplots(1,filter_length)
-        ax[0].set_ylabel('motif '+str(f))
-        for i in range(filter_length):
-            ax[i].set_xlabel('frame '+str(frames[i]))
-            ax[i].set_yticks([])
-            ax[i].set_yticklabels([])
-            ax[i].set_xticks([])
-            ax[i].set_xticklabels([])
-            ax[i].imshow(highlights[i], vmin=np.min(highlights), vmax=np.max(highlights), cmap=plt.cm.binary)
+        if filter_length == 1:
+            ax.set_ylabel('motif '+str(f))
+            ax.set_xlabel('frame '+str(frames[0]))
+            ax.set_yticks([])
+            ax.set_yticklabels([])
+            ax.set_xticks([])
+            ax.set_xticklabels([])
+            ax.imshow(highlights[0], vmin=np.min(highlights), vmax=np.max(highlights), cmap=plt.cm.binary)
         
+        else:
+            ax[0].set_ylabel('motif '+str(f))
+            for i in range(filter_length):
+                ax[i].set_xlabel('frame '+str(frames[i]))
+                ax[i].set_yticks([])
+                ax[i].set_yticklabels([])
+                ax[i].set_xticks([])
+                ax[i].set_xticklabels([])
+                ax[i].imshow(highlights[i], vmin=np.min(highlights), vmax=np.max(highlights), cmap=plt.cm.binary)
+            
         if self.eps == True:
             fig.savefig(self.folder+'motif_'+str(f)+'_highlights'+self.ending+'.eps',bbox_inches='tight')
         else:
@@ -185,11 +220,11 @@ class make_plots(object):
         n_filter = motifs.shape[0]
         filter_length = motifs.shape[1]
         if filter_length < 50:        
-            width = filter_length*10
-            height = n_filter*10
+            width = filter_length*7.
+            height = n_filter*7.
         else:
-            width = filter_length*5
-            height = n_filter*5
+            width = filter_length*5.
+            height = n_filter*5.
             
         params = {
                 'axes.labelsize': 50,
@@ -216,32 +251,59 @@ class make_plots(object):
         fig, ax = plt.subplots(n_filter,filter_length)
         
         if n_filter == 1:
-            ax[0].set_ylabel('motif 0')
-            for i in range(filter_length):
-                ax[i].set_xlabel('frame '+str(i))
+            if filter_length == 1:
+                ax.set_ylabel('motif 0')
+                ax.set_xlabel('frame 0')
                     
-                ax[i].set_yticks([])
-                ax[i].set_yticklabels([])
-                ax[i].set_xticks([])
-                ax[i].set_xticklabels([])
+                ax.set_yticks([])
+                ax.set_yticklabels([])
+                ax.set_xticks([])
+                ax.set_xticklabels([])
                 
-                limit = max(np.abs(np.max(difference[0,i])),np.abs(np.min(difference[0,i])))
-                ax[i].imshow(difference[0,i], vmin=-limit, vmax=limit, cmap=plt.cm.RdBu)
-        else:
-            for j in range(n_filter):
-                ax[j,0].set_ylabel('motif '+str(j))
+                limit = max(np.abs(np.max(difference[0,0])),np.abs(np.min(difference[0,0])))
+                ax.imshow(difference[0,0], vmin=-limit, vmax=limit, cmap=plt.cm.RdBu)
+            else:
+                ax[0].set_ylabel('motif 0')
                 for i in range(filter_length):
-                    if j == n_filter-1:
-                        ax[j,i].set_xlabel('frame '+str(i))
+                    ax[i].set_xlabel('frame '+str(i))
                         
-                    ax[j,i].set_yticks([])
-                    ax[j,i].set_yticklabels([])
-                    ax[j,i].set_xticks([])
-                    ax[j,i].set_xticklabels([])
+                    ax[i].set_yticks([])
+                    ax[i].set_yticklabels([])
+                    ax[i].set_xticks([])
+                    ax[i].set_xticklabels([])
                     
-                    limit = max(np.abs(np.max(difference[j,i])),np.abs(np.min(difference[j,i])))
-                    ax[j,i].imshow(difference[j,i], vmin=-limit, vmax=limit, cmap=plt.cm.RdBu)
+                    limit = max(np.abs(np.max(difference[0,i])),np.abs(np.min(difference[0,i])))
+                    ax[i].imshow(difference[0,i], vmin=-limit, vmax=limit, cmap=plt.cm.RdBu)
+        else:
+            if filter_Length == 1:
+                for j in range(n_filter):
+                    ax[j].set_ylabel('motif '+str(j))
+                    if j == n_filter-1:
+                        ax[j].set_xlabel('frame 0')
+                        
+                    ax[j].set_yticks([])
+                    ax[j].set_yticklabels([])
+                    ax[j].set_xticks([])
+                    ax[j].set_xticklabels([])
                     
+                    limit = max(np.abs(np.max(difference[j,0])),np.abs(np.min(difference[j,0])))
+                    ax[j].imshow(difference[j,0], vmin=-limit, vmax=limit, cmap=plt.cm.RdBu)
+            
+            else:
+                for j in range(n_filter):
+                    ax[j,0].set_ylabel('motif '+str(j))
+                    for i in range(filter_length):
+                        if j == n_filter-1:
+                            ax[j,i].set_xlabel('frame '+str(i))
+                            
+                        ax[j,i].set_yticks([])
+                        ax[j,i].set_yticklabels([])
+                        ax[j,i].set_xticks([])
+                        ax[j,i].set_xticklabels([])
+                        
+                        limit = max(np.abs(np.max(difference[j,i])),np.abs(np.min(difference[j,i])))
+                        ax[j,i].imshow(difference[j,i], vmin=-limit, vmax=limit, cmap=plt.cm.RdBu)
+                        
         if self.eps == True:
             fig.savefig(self.folder+'motifs_difference'+self.ending+'.eps',bbox_inches='tight')
         else:
@@ -253,8 +315,8 @@ class make_plots(object):
     def plot_z(self,z):
         n_filter = z.shape[0]
         n_frames = z.shape[1]
-        height = n_filter*5
-        width = n_frames/100
+        height = n_filter*5.
+        width = n_frames/100.
         params = {
                 'axes.labelsize': 50,
                 'font.size': 50,
@@ -362,7 +424,6 @@ class make_plots(object):
 
     def make_motif_movies(self,x):
         n_filter = x.shape[0]
-        filter_length = x.shape[1]
         
         for n in range(n_filter):
             a = x[n]
@@ -371,7 +432,7 @@ class make_plots(object):
             for m in a:
                 imlist.append(Image.fromarray(m))
             
-            # By saving it as a GIF and then opening it and saving it as a TIFF
+            # saving it as a GIF and then opening it and saving it as a TIFF
             imlist[0].save(self.folder+"motif_"+str(n)+self.ending+".gif", save_all=True, append_images=imlist[1:])
             Image.open(self.folder+"motif_"+str(n)+self.ending+".gif").save(folder+"motif_"+str(n)+ending+".tif", save_all=True)
             

@@ -77,16 +77,14 @@ class LeMoNADe_VAE(nn.Module):
     
     def repar(self,alpha_1,alpha_2):
         # reparametrization trick for the BinConcrete distributions
-        T = alpha_1.data.size(2)
-        M = alpha_1.data.size(1)
-        # sample U from Uniform(0,1)
         eps = 1e-7
-        U = torch.rand((M,T),dtype=self.dtype, device=self.device, requires_grad=False)
+        self.alpha = alpha_1.div(alpha_2+eps)
+        # sample U from Uniform(0,1)
+        U = torch.rand(self.alpha.size(),dtype=self.dtype, device=self.device, requires_grad=False)
         
-        self.alpha = alpha_1[0,:,:,0,0].div(alpha_2[0,:,:,0,0]+eps)
         y = (self.alpha.mul(U).div(1-U+eps)).pow(1/self.lambda_1)
-        z = y.div(1+y).mul(alpha_1[0,:,:,0,0])
-        return(z.view(alpha_1.size()))
+        z = y.div(1+y).mul(alpha_1)
+        return(z)
     
     def forward(self,x):
         # forward pass

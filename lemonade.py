@@ -24,7 +24,7 @@ import plot
 class LeMoNADe(object):
     def __init__(self, data_file, n_filter, filter_length, a,
                  data_sheet='ca_video', beta_kld=.1, 
-                 mode='toobig', batch_length=500, 
+                 mode='batches', batch_length=500, 
                  epochs=10000, gpu=None, quiet=False):
         
         
@@ -95,7 +95,7 @@ class LeMoNADe(object):
             while os.path.exists(folder + '/results' + ending + '_' + str(i) + '.h5'):
                 i += 1
             ending += '_' + str(i)
-                
+        ending += '_testpublic'        
         return(folder, ending)
     
     def KLD_function(self, alpha):
@@ -103,21 +103,21 @@ class LeMoNADe(object):
         # KL regularization
         eps = 1e-7
         S = 1000
-        N = alpha.size(0) * alpha.size(1) 
+        N = alpha.size(1) * alpha.size(2) 
+        #alpha_new = alpha[0,:,:,:,0]
+        alpha_expanded = alpha[0,:,:,:,0].expand(alpha[0,:,:,:,0].size(0),alpha[0,:,:,:,0].size(1),S)
+        one = torch.ones(alpha[0,:,:,:,0].size(),dtype=self.dtype, device=self.device, requires_grad=False)
         # sampled from Uniform[0,1)
-        U = torch.rand((alpha.size(0),alpha.size(1),S),dtype=self.dtype,device=self.device,requires_grad=False) 
-        alpha_new = alpha.view(alpha.size(0),alpha.size(1),1)
-        alpha_expanded = alpha_new.expand(alpha.size(0),alpha.size(1),S)
-        one = torch.ones(alpha.size(),dtype=self.dtype, device=self.device, requires_grad=False)
+        U = torch.rand(alpha_expanded.size(),dtype=self.dtype,device=self.device,requires_grad=False) 
             
         # log(a*lambda_2 / lambda_1) + 2
         fixed = torch.log(one.mul(self.a * self.lambda_2 / self.lambda_1)).add_(2.) 
             
         # -lambda_2 / lambda_1 * log(alpha)
-        log_alpha = torch.log(alpha+eps).mul(-self.lambda_2 / self.lambda_1)
+        log_alpha = torch.log(alpha[0,:,:,:,0]+eps).mul(-self.lambda_2 / self.lambda_1)
             
         # -2/S sum_s log(a * (alpha * U / (1-U))^(-lambda_2 / lambda_1) + 1)
-        integral = torch.sum(torch.log((((U).div(1-U+eps)).mul(alpha_expanded)).add(eps).pow(-self.lambda_2/self.lambda_1).mul(self.a).add(1.)),dim=2).div(S).mul(-2.)            
+        integral = torch.sum(torch.log((((U).div(1-U+eps)).mul(alpha_expanded)).add(eps).pow(-self.lambda_2/self.lambda_1).mul(self.a).add(1.)),dim=2,keepdim=True).div(S).mul(-2.)            
             
             
         KLD = torch.sum(fixed.mul_(-1).add_(log_alpha.mul_(-1)).add_(integral.mul_(-1))).div_(N)
@@ -153,7 +153,7 @@ class LeMoNADe(object):
     def get_results(self):
         
         with torch.no_grad():
-            if self.mode == 'batches' or self.mode == 'toobig':
+            if self.mode == 'batches':
                 all_z = []
                 
                 if self.dataset.__real_len__()/self.batch_length > int(self.dataset.__real_len__()/self.batch_length):
