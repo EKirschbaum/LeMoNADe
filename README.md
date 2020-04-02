@@ -6,8 +6,8 @@ This is a toolbox to identify reoccurring neuronal firing patterns (aka motifs) 
 
 If you use this software in your research, please cite our publication:
 
-**"LeMoNADe: Learned Motif and Neuronal Assembly Detection in calcium imaging videos"**, E. Kirschbaum, M. Haußmann, S. Wolf, H. Jakobi, J. Schneider, S. Elzoheiry, O.Kann, D. Durstewitz, F. A. Hamprecht, *arXiv preprint arXiv:1806.09963*, 2018. 
-[[pdf]](https://arxiv.org/pdf/1806.09963.pdf)
+**"LeMoNADe: Learned Motif and Neuronal Assembly Detection in calcium imaging videos"**, E. Kirschbaum, M. Haußmann, S. Wolf, H. Jakobi, J. Schneider, S. Elzoheiry, O.Kann, D. Durstewitz, F. A. Hamprecht, *ICLR*, 2019. 
+[[pdf]](https://openreview.net/pdf?id=SkloDjAqYm)
 
 ## Requirements:
 
